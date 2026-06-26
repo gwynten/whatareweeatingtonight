@@ -590,19 +590,13 @@
         <input id="cityInput" placeholder="ex: Phoenix, AZ or near me" />
 
         <button class="primary" id="joinBtn">start the vote</button>
-
-        <p class="tiny">
-          Prototype note: this saves group votes in this browser. A real deployed version would use Firebase or Supabase to sync everyone live.
-        </p>
-
-        <div class="chips" aria-label="Cuisine examples">
+<div class="chips" aria-label="Cuisine examples">
           <span class="chip">szechuan</span>
           <span class="chip">cantonese</span>
           <span class="chip">dim sum</span>
           <span class="chip">hot pot</span>
           <span class="chip">uyghur</span>
           <span class="chip">burmese</span>
-          <span class="chip">laotian</span>
           <span class="chip">korean bbq</span>
         </div>
       </section>
@@ -679,7 +673,6 @@
       { name: "shanghainese", region: "chinese", emoji: "🥟", query: "shanghainese restaurant", desc: "soup dumplings, noodles, and cozy richness." },
       { name: "hunan", region: "chinese", emoji: "🌶️", query: "hunan restaurant", desc: "bold heat, smoky flavor, no bland compromises." },
       { name: "xi’an noodles", region: "chinese", emoji: "🍜", query: "xian noodles restaurant", desc: "hand-pulled noodles, cumin, chili oil, joy." },
-      { name: "uyghur", region: "central asian", emoji: "🍢", query: "uyghur restaurant", desc: "laghman noodles, lamb skewers, warming spices." },
       { name: "taiwanese", region: "taiwanese", emoji: "🍗", query: "taiwanese restaurant", desc: "popcorn chicken, beef noodle soup, boba after." },
       { name: "hong kong cafe", region: "cantonese", emoji: "🍞", query: "hong kong cafe", desc: "milk tea, baked rice, breakfast-for-dinner energy." },
       { name: "ramen", region: "japanese", emoji: "🍜", query: "ramen restaurant", desc: "warm, brothy, emotionally corrective." },
@@ -691,25 +684,16 @@
       { name: "korean stew", region: "korean", emoji: "🍚", query: "korean stew restaurant", desc: "soondubu, kimchi jjigae, soft rice comfort." },
       { name: "korean fried chicken", region: "korean", emoji: "🍗", query: "korean fried chicken restaurant", desc: "crispy, saucy, shareable, always persuasive." },
       { name: "thai", region: "thai", emoji: "🍛", query: "thai restaurant", desc: "sweet, sour, spicy, and reliable." },
-      { name: "thai boat noodles", region: "thai", emoji: "🍜", query: "thai boat noodles restaurant", desc: "deep broth, herbs, cozy intensity." },
       { name: "vietnamese pho", region: "vietnamese", emoji: "🍜", query: "pho restaurant", desc: "broth, herbs, lime, peace restored." },
       { name: "banh mi", region: "vietnamese", emoji: "🥖", query: "banh mi restaurant", desc: "crunchy, bright, fast, elite." },
       { name: "bun bo hue", region: "vietnamese", emoji: "🌶️", query: "bun bo hue restaurant", desc: "spicy lemongrass noodle soup with main-character energy." },
       { name: "filipino", region: "filipino", emoji: "🍖", query: "filipino restaurant", desc: "adobo, pancit, lumpia, and joy." },
-      { name: "filipino bbq", region: "filipino", emoji: "🍢", query: "filipino bbq restaurant", desc: "sweet skewers, garlic rice, very yes." },
       { name: "indian", region: "south asian", emoji: "🍛", query: "indian restaurant", desc: "curries, chaat, dosa, naan, full happiness." },
       { name: "south indian dosa", region: "south asian", emoji: "🥞", query: "south indian dosa restaurant", desc: "crispy dosa, sambar, chutney, perfect texture." },
       { name: "pakistani", region: "south asian", emoji: "🍖", query: "pakistani restaurant", desc: "biryani, karahi, kebabs, rich spice." },
       { name: "nepali momo", region: "south asian", emoji: "🥟", query: "momo restaurant", desc: "dumplings with sauce worth fighting for." },
       { name: "malaysian", region: "southeast asian", emoji: "🍚", query: "malaysian restaurant", desc: "laksa, nasi lemak, roti, big flavor." },
-      { name: "singaporean", region: "southeast asian", emoji: "🍗", query: "singaporean restaurant", desc: "chicken rice, laksa, noodles, city magic." },
-      { name: "indonesian", region: "southeast asian", emoji: "🍢", query: "indonesian restaurant", desc: "satay, rendang, fried rice, smoky-sweet comfort." },
-      { name: "burmese", region: "southeast asian", emoji: "🥗", query: "burmese restaurant", desc: "tea leaf salad, noodles, bright crunch." },
-      { name: "laotian", region: "southeast asian", emoji: "🌿", query: "laotian restaurant", desc: "laap, sticky rice, herbs, and heat." },
-      { name: "cambodian", region: "southeast asian", emoji: "🍚", query: "cambodian restaurant", desc: "lemongrass, rice, grilled flavors, gentle warmth." },
-      { name: "mongolian", region: "east asian", emoji: "🥩", query: "mongolian restaurant", desc: "noodles, stir-fry, hearty comfort." },
-      { name: "asian dessert", region: "dessert", emoji: "🍧", query: "asian dessert near me", desc: "shaved ice, mango, mochi, boba, soft ending." },
-      { name: "boba and snacks", region: "snack dinner", emoji: "🧋", query: "boba snacks restaurant", desc: "for when dinner is vibes and little treats." }
+      { name: "asian dessert", region: "dessert", emoji: "🍧", query: "asian dessert near me", desc: "shaved ice, mango, mochi, boba, soft ending." }
     ];
 
     let currentIndex = 0;
