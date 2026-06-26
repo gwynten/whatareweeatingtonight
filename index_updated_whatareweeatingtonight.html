@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>what are we eating tonight?</title>
+  <style>
+    :root {
+      --paper-pink: #ffd6df;
+      --paper-pink-2: #ffc3d1;
+      --grid-pink: #ec7fa4;
+      --grid-pink-soft: rgba(236, 127, 164, 0.55);
+      --aqua: #c8f1e7;
+      --aqua-soft: #e4fff7;
+      --teal: #0799a5;
+      --teal-dark: #087984;
+      --sun: #f8c95f;
+      --cream: #fff7dc;
+      --coral: #e96b72;
+      --ink-shadow: rgba(6, 96, 105, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--paper-pink);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--teal-dark);
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+
+      /* Whimsical hand-drawn crayon grid */
+      background-color: var(--paper-pink);
+      background-image:
+        url("data:image/svg+xml,%3Csvg width='92' height='76' viewBox='0 0 92 76' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 5 C12 4, 20 7, 33 5 C49 3, 63 6, 92 4' fill='none' stroke='%23ec7fa4' stroke-width='2.4' stroke-linecap='round' opacity='.62'/%3E%3Cpath d='M2 39 C14 37, 25 40, 38 39 C52 38, 64 41, 91 38' fill='none' stroke='%23ec7fa4' stroke-width='2.1' stroke-linecap='round' opacity='.47'/%3E%3Cpath d='M7 0 C5 10, 8 21, 6 34 C4 50, 8 60, 6 76' fill='none' stroke='%23ec7fa4' stroke-width='2.2' stroke-linecap='round' opacity='.52'/%3E%3Cpath d='M52 0 C54 13, 50 23, 53 37 C56 50, 51 64, 53 76' fill='none' stroke='%23ec7fa4' stroke-width='2' stroke-linecap='round' opacity='.42'/%3E%3C/svg%3E"),
+        radial-gradient(circle at 16% 9%, rgba(255, 247, 220, 0.45), transparent 18%),
+        radial-gradient(circle at 88% 18%, rgba(200, 241, 231, 0.42), transparent 23%);
+      background-size: 92px 76px, 100% 100%, 100% 100%;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 440px;
+      min-height: 790px;
+      background: rgba(255, 247, 220, 0.72);
+      border: 3px solid var(--teal);
+      border-radius: 34px;
+      box-shadow: 0 22px 55px var(--ink-shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .top-panel {
+      background:
+        url("data:image/svg+xml,%3Csvg width='76' height='58' viewBox='0 0 76 58' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 9 C15 7, 27 11, 42 8 C55 6, 64 10, 76 8' fill='none' stroke='%230799a5' stroke-width='2.2' stroke-linecap='round' opacity='.22'/%3E%3Cpath d='M10 0 C8 13, 12 25, 10 39 C9 48, 12 54, 10 58' fill='none' stroke='%230799a5' stroke-width='2' stroke-linecap='round' opacity='.18'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, var(--aqua) 0%, var(--aqua-soft) 100%);
+      background-size: 76px 58px, 100% 100%;
+      padding: 22px 22px 18px;
+      border-bottom: 8px double var(--teal);
+      position: relative;
+    }
+
+    .spiral {
+      height: 16px;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          var(--teal-dark) 0 8px,
+          transparent 8px 21px
+        );
+      opacity: 0.75;
+      margin: 0 -22px 16px;
+    }
+
+    h1, h2, p {
+      overflow-wrap: anywhere;
+      hyphens: auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.95rem, 8.2vw, 3rem);
+      line-height: 0.9;
+      letter-spacing: 0.01em;
+      text-transform: lowercase;
+      color: var(--teal);
+      text-shadow: 1px 1px 0 var(--cream);
+      max-width: 100%;
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      font-size: clamp(0.95rem, 3.7vw, 1.05rem);
+      line-height: 1.28;
+      color: var(--teal-dark);
+      max-width: 100%;
+    }
+
+    .handnote {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border: 2px solid var(--teal);
+      background: rgba(255, 247, 220, 0.62);
+      transform: rotate(-0.7deg);
+      font-size: clamp(0.9rem, 3.5vw, 0.98rem);
+      line-height: 1.25;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .content {
+      padding: 22px;
+      min-height: 530px;
+      background:
+        url("data:image/svg+xml,%3Csvg width='78' height='64' viewBox='0 0 78 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 7 C10 6, 20 8, 31 7 C45 5, 57 9, 78 6' fill='none' stroke='%23ec7fa4' stroke-width='2.5' stroke-linecap='round' opacity='.72'/%3E%3Cpath d='M1 37 C12 35, 20 38, 35 37 C49 36, 61 39, 78 36' fill='none' stroke='%23ec7fa4' stroke-width='2.1' stroke-linecap='round' opacity='.57'/%3E%3Cpath d='M6 0 C5 12, 8 22, 6 34 C4 47, 7 55, 6 64' fill='none' stroke='%23ec7fa4' stroke-width='2.3' stroke-linecap='round' opacity='.62'/%3E%3Cpath d='M46 0 C48 11, 45 22, 47 34 C49 45, 45 55, 47 64' fill='none' stroke='%23ec7fa4' stroke-width='2' stroke-linecap='round' opacity='.52'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, rgba(255, 214, 223, 0.96), rgba(255, 195, 209, 0.96));
+      background-size: 78px 64px, 100% 100%;
+    }
+
+    .screen {
+      display: none;
+      animation: pageIn 240ms ease-out;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    label {
+      display: block;
+      font-size: clamp(0.95rem, 3.5vw, 1rem);
+      margin: 12px 0 6px;
+      color: var(--teal-dark);
+      font-weight: 700;
+      max-width: 100%;
+    }
+
+    input {
+      width: 100%;
+      border: 2px solid var(--grid-pink);
+      border-radius: 18px;
+      padding: 13px 14px;
+      background: rgba(255, 247, 220, 0.94);
+      color: var(--teal-dark);
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      font-size: 1rem;
+      outline: none;
+      min-width: 0;
+    }
+
+    input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 4px rgba(7, 153, 165, 0.14);
+    }
+
+    button, .button-link {
+      border: 2px solid var(--teal-dark);
+      border-radius: 999px;
+      padding: 13px 16px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      font-size: clamp(0.94rem, 3.5vw, 1rem);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 4px 5px 0 rgba(8, 121, 132, 0.22);
+      transition: transform 130ms ease, box-shadow 130ms ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 48px;
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      line-height: 1.15;
+    }
+
+    button:active, .button-link:active {
+      transform: translate(3px, 3px);
+      box-shadow: 1px 2px 0 rgba(8, 121, 132, 0.25);
+    }
+
+    .primary {
+      width: 100%;
+      margin-top: 18px;
+      background: var(--teal);
+      color: var(--cream);
+    }
+
+    .secondary {
+      background: var(--cream);
+      color: var(--teal-dark);
+    }
+
+    .danger {
+      background: #fff1f5;
+      color: #a83458;
+      border-color: var(--grid-pink);
+    }
+
+    .yes {
+      background: var(--teal);
+      color: var(--cream);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .no {
+      background: var(--cream);
+      color: var(--coral);
+      border-color: var(--coral);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    .tiny {
+      font-size: clamp(0.82rem, 3.25vw, 0.9rem);
+      color: var(--teal-dark);
+      opacity: 0.94;
+      margin-top: 12px;
+      line-height: 1.35;
+      max-width: 100%;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+      max-width: 100%;
+    }
+
+    .chip {
+      border: 2px solid var(--grid-pink);
+      background: rgba(255, 247, 220, 0.92);
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-size: clamp(0.8rem, 3.2vw, 0.9rem);
+      color: var(--teal-dark);
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .card-wrap {
+      position: relative;
+      height: 392px;
+      margin-bottom: 16px;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .food-card {
+      position: absolute;
+      inset: 0;
+      border: 3px solid var(--teal);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.45), transparent 25%),
+        url("data:image/svg+xml,%3Csvg width='70' height='56' viewBox='0 0 70 56' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6 C11 4, 20 8, 32 6 C44 5, 55 8, 70 5' fill='none' stroke='%23ec7fa4' stroke-width='1.8' stroke-linecap='round' opacity='.18'/%3E%3Cpath d='M8 0 C6 12, 10 24, 8 36 C7 46, 9 51, 8 56' fill='none' stroke='%230799a5' stroke-width='1.7' stroke-linecap='round' opacity='.15'/%3E%3C/svg%3E"),
+        linear-gradient(150deg, var(--aqua), var(--cream) 48%, #ffe49c);
+      background-size: 100% 100%, 70px 56px, 100% 100%;
+      border-radius: 28px;
+      padding: 22px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 10px;
+      box-shadow: 9px 11px 0 rgba(236, 127, 164, 0.42);
+      user-select: none;
+      touch-action: pan-y;
+      transition: transform 220ms ease, opacity 220ms ease;
+      overflow: hidden;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .food-card::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 2px dashed rgba(7, 153, 165, 0.38);
+      border-radius: 22px;
+      pointer-events: none;
+    }
+
+    .stamp {
+      justify-self: start;
+      border: 2px solid var(--grid-pink);
+      color: var(--coral);
+      background: rgba(255, 247, 220, 0.9);
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: clamp(0.78rem, 3.15vw, 0.92rem);
+      z-index: 1;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      line-height: 1.1;
+    }
+
+    .food-emoji {
+      font-size: clamp(3.8rem, 16vw, 5.1rem);
+      line-height: 1;
+      text-align: center;
+      filter: drop-shadow(2px 4px 0 rgba(8,121,132,0.16));
+      z-index: 1;
+      align-self: center;
+    }
+
+    .food-text {
+      z-index: 1;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .food-name {
+      margin: 0 auto;
+      font-size: clamp(1.65rem, 8.5vw, 3.15rem);
+      line-height: 0.96;
+      color: var(--teal);
+      text-align: center;
+      text-transform: lowercase;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: normal;
+      hyphens: auto;
+    }
+
+    .food-desc {
+      margin: 9px auto 0;
+      font-size: clamp(0.88rem, 3.5vw, 1rem);
+      line-height: 1.25;
+      color: var(--teal-dark);
+      text-align: center;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .swipe-hint {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+      font-weight: 700;
+      color: var(--teal-dark);
+      font-size: clamp(0.86rem, 3.3vw, 1rem);
+      max-width: 100%;
+    }
+
+    .swipe-hint span {
+      overflow-wrap: anywhere;
+    }
+
+    .swipe-hint span:last-child {
+      text-align: right;
+    }
+
+    .progress {
+      height: 12px;
+      background: rgba(255, 247, 220, 0.8);
+      border: 2px solid var(--grid-pink);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      background: var(--teal);
+      width: 0;
+      transition: width 220ms ease;
+    }
+
+    .winner-box {
+      background: rgba(255, 247, 220, 0.92);
+      border: 3px solid var(--teal);
+      border-radius: 26px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 8px 10px 0 rgba(236, 127, 164, 0.35);
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .winner-box .emoji {
+      font-size: clamp(3.2rem, 14vw, 4.6rem);
+      margin-bottom: 8px;
+    }
+
+    .winner-box h2 {
+      margin: 0 auto;
+      font-size: clamp(1.75rem, 8vw, 2.8rem);
+      color: var(--teal);
+      text-transform: lowercase;
+      line-height: 0.98;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      hyphens: auto;
+    }
+
+    .results-list {
+      margin: 18px 0;
+      display: grid;
+      gap: 10px;
+      max-width: 100%;
+    }
+
+    .result-item {
+      background: rgba(255, 247, 220, 0.92);
+      border: 2px solid var(--grid-pink);
+      border-radius: 18px;
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      font-weight: 700;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .result-name {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      line-height: 1.15;
+    }
+
+    .result-count {
+      white-space: nowrap;
+    }
+
+    .bar {
+      grid-column: 1 / -1;
+      height: 9px;
+      background: rgba(236, 127, 164, 0.26);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      background: var(--teal);
+      width: 0;
+    }
+
+    .map-card {
+      display: none;
+      background: rgba(200, 241, 231, 0.86);
+      border: 2px solid var(--teal);
+      border-radius: 22px;
+      padding: 14px;
+      margin: 15px 0;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .map-card.active {
+      display: block;
+    }
+
+    .button-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+      max-width: 100%;
+    }
+
+    .button-grid.two {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .button-link {
+      width: 100%;
+      background: var(--teal);
+      color: var(--cream);
+      min-width: 0;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(120px);
+      background: var(--teal-dark);
+      color: var(--cream);
+      border-radius: 999px;
+      padding: 12px 16px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+      font-size: 0.95rem;
+      transition: transform 220ms ease;
+      z-index: 20;
+      max-width: calc(100vw - 32px);
+      overflow-wrap: anywhere;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 390px) {
+      body {
+        padding: 0;
+      }
+
+      .phone {
+        min-height: 100vh;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+      }
+
+      .content {
+        padding: 18px;
+      }
+
+      .card-wrap {
+        height: 370px;
+      }
+
+      .button-grid.two {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 330px) {
+      .top-panel {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .content {
+        padding: 14px;
+      }
+
+      .food-card {
+        padding: 18px;
+      }
+
+      .row {
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <section class="top-panel">
+      <div class="spiral" aria-hidden="true"></div>
+      <h1>what are we eating tonight?</h1>
+      <p class="subtitle">a soft little consensus machine for hungry friends.</p>
+      <p class="handnote">resilience can’t last forever… sometimes the group just needs dumplings.</p>
+    </section>
+
+    <section class="content">
+      <section id="setupScreen" class="screen active">
+        <label for="userName">your name</label>
+        <input id="userName" placeholder="ex: Angeli" autocomplete="name" />
+
+        <label for="groupCode">dinner group code</label>
+        <input id="groupCode" placeholder="ex: friday-night" />
+
+        <label for="cityInput">where are you eating?</label>
+        <input id="cityInput" placeholder="ex: Phoenix, AZ or near me" />
+
+        <button class="primary" id="joinBtn">start the vote</button>
+<div class="chips" aria-label="Cuisine examples">
+          <span class="chip">szechuan</span>
+          <span class="chip">cantonese</span>
+          <span class="chip">dim sum</span>
+          <span class="chip">hot pot</span>
+          <span class="chip">uyghur</span>
+          <span class="chip">burmese</span>
+          <span class="chip">korean bbq</span>
+        </div>
+      </section>
+
+      <section id="voteScreen" class="screen">
+        <div class="swipe-hint">
+          <span>← no</span>
+          <span id="progressText">1 / 1</span>
+          <span>yes →</span>
+        </div>
+
+        <div class="progress" aria-hidden="true">
+          <span id="progressBar"></span>
+        </div>
+
+        <div class="card-wrap">
+          <article id="foodCard" class="food-card">
+            <span class="stamp" id="foodRegion">cuisine</span>
+            <div class="food-emoji" id="foodEmoji">🍜</div>
+            <div class="food-text">
+              <h2 class="food-name" id="foodName">ramen</h2>
+              <p class="food-desc" id="foodDesc">warm, brothy, emotionally corrective.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="row">
+          <button class="no" id="noBtn">no</button>
+          <button class="yes" id="yesBtn">yes</button>
+        </div>
+
+        <p class="tiny">Tip: you can also drag the card left or right.</p>
+      </section>
+
+      <section id="resultsScreen" class="screen">
+        <div class="winner-box">
+          <div class="emoji" id="winnerEmoji">🍜</div>
+          <p class="tiny">tonight’s consensus is</p>
+          <h2 id="winnerName">ramen</h2>
+          <p id="winnerVotes" class="tiny">0 yes votes</p>
+        </div>
+
+        <div class="button-grid">
+          <button class="primary" id="chooseRestaurantBtn">choose a place nearby</button>
+        </div>
+
+        <div class="map-card" id="mapCard">
+          <strong id="mapTitle">Directions ready.</strong>
+          <p class="tiny" id="mapText">Open maps and send the directions to the group.</p>
+          <div class="button-grid two">
+            <a class="button-link" id="mapsLink" target="_blank" rel="noreferrer">open maps</a>
+            <button class="secondary" id="shareBtn">send to everyone</button>
+          </div>
+        </div>
+
+        <div class="results-list" id="resultsList"></div>
+
+        <div class="button-grid two">
+          <button class="secondary" id="voteAgainBtn">add another voter</button>
+          <button class="danger" id="resetBtn">reset group</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast">copied</div>
+
+  <script>
+    const cuisines = [
+      { name: "szechuan", region: "chinese", emoji: "🌶️", query: "szechuan restaurant", desc: "spicy, numbing, dramatic in the best way." },
+      { name: "cantonese", region: "chinese", emoji: "🥢", query: "cantonese restaurant", desc: "comforting classics, roast meats, seafood, noodles." },
+      { name: "dim sum", region: "cantonese", emoji: "🥟", query: "dim sum restaurant", desc: "tiny baskets, big feelings." },
+      { name: "hot pot", region: "east asian", emoji: "🍲", query: "hot pot restaurant", desc: "for groups that need broth and a shared mission." },
+      { name: "shanghainese", region: "chinese", emoji: "🥟", query: "shanghainese restaurant", desc: "soup dumplings, noodles, and cozy richness." },
+      { name: "hunan", region: "chinese", emoji: "🌶️", query: "hunan restaurant", desc: "bold heat, smoky flavor, no bland compromises." },
+      { name: "xi’an noodles", region: "chinese", emoji: "🍜", query: "xian noodles restaurant", desc: "hand-pulled noodles, cumin, chili oil, joy." },
+      { name: "taiwanese", region: "taiwanese", emoji: "🍗", query: "taiwanese restaurant", desc: "popcorn chicken, beef noodle soup, boba after." },
+      { name: "hong kong cafe", region: "cantonese", emoji: "🍞", query: "hong kong cafe", desc: "milk tea, baked rice, breakfast-for-dinner energy." },
+      { name: "ramen", region: "japanese", emoji: "🍜", query: "ramen restaurant", desc: "warm, brothy, emotionally corrective." },
+      { name: "sushi", region: "japanese", emoji: "🍣", query: "sushi restaurant", desc: "clean, celebratory, easy to say yes to." },
+      { name: "izakaya", region: "japanese", emoji: "🍢", query: "izakaya restaurant", desc: "small plates, skewers, and lingering conversation." },
+      { name: "japanese curry", region: "japanese", emoji: "🍛", query: "japanese curry restaurant", desc: "cozy curry rice for low-energy nights." },
+      { name: "udon", region: "japanese", emoji: "🍜", query: "udon restaurant", desc: "thick noodles, gentle broth, soft landing." },
+      { name: "korean bbq", region: "korean", emoji: "🥩", query: "korean bbq restaurant", desc: "high-consensus, high-sizzle dinner." },
+      { name: "korean stew", region: "korean", emoji: "🍚", query: "korean stew restaurant", desc: "soondubu, kimchi jjigae, soft rice comfort." },
+      { name: "korean fried chicken", region: "korean", emoji: "🍗", query: "korean fried chicken restaurant", desc: "crispy, saucy, shareable, always persuasive." },
+      { name: "thai", region: "thai", emoji: "🍛", query: "thai restaurant", desc: "sweet, sour, spicy, and reliable." },
+      { name: "vietnamese pho", region: "vietnamese", emoji: "🍜", query: "pho restaurant", desc: "broth, herbs, lime, peace restored." },
+      { name: "banh mi", region: "vietnamese", emoji: "🥖", query: "banh mi restaurant", desc: "crunchy, bright, fast, elite." },
+      { name: "bun bo hue", region: "vietnamese", emoji: "🌶️", query: "bun bo hue restaurant", desc: "spicy lemongrass noodle soup with main-character energy." },
+      { name: "filipino", region: "filipino", emoji: "🍖", query: "filipino restaurant", desc: "adobo, pancit, lumpia, and joy." },
+      { name: "indian", region: "south asian", emoji: "🍛", query: "indian restaurant", desc: "curries, chaat, dosa, naan, full happiness." },
+      { name: "south indian dosa", region: "south asian", emoji: "🥞", query: "south indian dosa restaurant", desc: "crispy dosa, sambar, chutney, perfect texture." },
+      { name: "pakistani", region: "south asian", emoji: "🍖", query: "pakistani restaurant", desc: "biryani, karahi, kebabs, rich spice." },
+      { name: "nepali momo", region: "south asian", emoji: "🥟", query: "momo restaurant", desc: "dumplings with sauce worth fighting for." },
+      { name: "malaysian", region: "southeast asian", emoji: "🍚", query: "malaysian restaurant", desc: "laksa, nasi lemak, roti, big flavor." },
+      { name: "asian dessert", region: "dessert", emoji: "🍧", query: "asian dessert near me", desc: "shaved ice, mango, mochi, boba, soft ending." }
+    ];
+
+    let currentIndex = 0;
+    let currentUser = "";
+    let groupCode = "";
+    let city = "";
+    let votes = {};
+    let currentWinner = null;
+
+    const $ = (id) => document.getElementById(id);
+
+    const setupScreen = $("setupScreen");
+    const voteScreen = $("voteScreen");
+    const resultsScreen = $("resultsScreen");
+    const foodCard = $("foodCard");
+
+    function showScreen(screen) {
+      [setupScreen, voteScreen, resultsScreen].forEach(s => s.classList.remove("active"));
+      screen.classList.add("active");
+    }
+
+    function slug(value) {
+      return value.trim().toLowerCase().replace(/\s+/g, "-");
+    }
+
+    function getStorageKey() {
+      return "wawe-tonight-" + slug(groupCode);
+    }
+
+    function saveVotes() {
+      localStorage.setItem(getStorageKey(), JSON.stringify(votes));
+    }
+
+    function loadVotes() {
+      const saved = localStorage.getItem(getStorageKey());
+      votes = saved ? JSON.parse(saved) : {};
+    }
+
+    function joinGroup() {
+      currentUser = $("userName").value.trim();
+      groupCode = $("groupCode").value.trim();
+      city = $("cityInput").value.trim();
+
+      if (!currentUser || !groupCode) {
+        alert("Please add your name and a group code.");
+        return;
+      }
+
+      loadVotes();
+      if (!votes[currentUser]) votes[currentUser] = {};
+
+      currentIndex = 0;
+      showScreen(voteScreen);
+      renderCuisine();
+    }
+
+    function renderCuisine() {
+      if (currentIndex >= cuisines.length) {
+        saveVotes();
+        showResults();
+        return;
+      }
+
+      const item = cuisines[currentIndex];
+      $("foodRegion").textContent = item.region;
+      $("foodEmoji").textContent = item.emoji;
+      $("foodName").textContent = item.name;
+      $("foodDesc").textContent = item.desc;
+      $("progressText").textContent = `${currentIndex + 1} / ${cuisines.length}`;
+      $("progressBar").style.width = `${((currentIndex) / cuisines.length) * 100}%`;
+
+      foodCard.style.transform = "translateX(0) rotate(0deg)";
+      foodCard.style.opacity = "1";
+    }
+
+    function castVote(liked) {
+      const item = cuisines[currentIndex];
+      votes[currentUser][item.name] = liked;
+      saveVotes();
+
+      foodCard.style.transform = liked ? "translateX(120%) rotate(12deg)" : "translateX(-120%) rotate(-12deg)";
+      foodCard.style.opacity = "0";
+
+      setTimeout(() => {
+        currentIndex++;
+        renderCuisine();
+      }, 180);
+    }
+
+    function calculateResults() {
+      const totals = {};
+      cuisines.forEach(item => totals[item.name] = 0);
+
+      Object.values(votes).forEach(userVotes => {
+        Object.entries(userVotes).forEach(([name, liked]) => {
+          if (liked && totals[name] !== undefined) totals[name]++;
+        });
+      });
+
+      return Object.entries(totals)
+        .map(([name, yes]) => {
+          const cuisine = cuisines.find(item => item.name === name);
+          return { ...cuisine, yes };
+        })
+        .sort((a, b) => b.yes - a.yes || a.name.localeCompare(b.name));
+    }
+
+    function showResults() {
+      showScreen(resultsScreen);
+
+      const sorted = calculateResults();
+      currentWinner = sorted[0] || cuisines[0];
+
+      $("winnerEmoji").textContent = currentWinner.emoji;
+      $("winnerName").textContent = currentWinner.name;
+      $("winnerVotes").textContent = `${currentWinner.yes} yes vote${currentWinner.yes === 1 ? "" : "s"} from ${Object.keys(votes).length} voter${Object.keys(votes).length === 1 ? "" : "s"}`;
+
+      const maxVotes = Math.max(1, currentWinner.yes);
+      $("resultsList").innerHTML = "";
+
+      sorted.slice(0, 14).forEach(item => {
+        const row = document.createElement("div");
+        row.className = "result-item";
+        row.innerHTML = `
+          <span class="result-name">${item.emoji} ${item.name}</span>
+          <span class="result-count">${item.yes} yes</span>
+          <div class="bar"><span style="width:${(item.yes / maxVotes) * 100}%"></span></div>
+        `;
+        $("resultsList").appendChild(row);
+      });
+
+      $("mapCard").classList.remove("active");
+    }
+
+    function mapsUrlFor(item) {
+      const place = city && city.toLowerCase() !== "near me"
+        ? `${item.query} in ${city}`
+        : `${item.query} near me`;
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place)}`;
+    }
+
+    function chooseRestaurant() {
+      if (!currentWinner) return;
+      const url = mapsUrlFor(currentWinner);
+
+      $("mapsLink").href = url;
+      $("mapTitle").textContent = `${currentWinner.name} directions are ready.`;
+      $("mapText").textContent = `Chosen by consensus. Open Maps, pick the exact restaurant, then share this with everyone in the group.`;
+      $("mapCard").classList.add("active");
+    }
+
+    async function shareDirections() {
+      if (!currentWinner) return;
+
+      const url = mapsUrlFor(currentWinner);
+      const text = `Dinner consensus: ${currentWinner.name}. Directions: ${url}`;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "what are we eating tonight?",
+            text,
+            url
+          });
+          return;
+        } catch (error) {}
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("directions copied");
+      } catch (error) {
+        showToast("copy unavailable");
+      }
+    }
+
+    function showToast(message) {
+      const toast = $("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1700);
+    }
+
+    function voteAgain() {
+      $("userName").value = "";
+      currentIndex = 0;
+      showScreen(setupScreen);
+      setTimeout(() => $("userName").focus(), 100);
+    }
+
+    function resetGroup() {
+      if (!groupCode) return;
+      localStorage.removeItem(getStorageKey());
+      votes = {};
+      currentIndex = 0;
+      currentWinner = null;
+      $("userName").value = "";
+      $("groupCode").value = "";
+      $("cityInput").value = "";
+      showScreen(setupScreen);
+      showToast("group reset");
+    }
+
+    $("joinBtn").addEventListener("click", joinGroup);
+    $("yesBtn").addEventListener("click", () => castVote(true));
+    $("noBtn").addEventListener("click", () => castVote(false));
+    $("chooseRestaurantBtn").addEventListener("click", chooseRestaurant);
+    $("shareBtn").addEventListener("click", shareDirections);
+    $("voteAgainBtn").addEventListener("click", voteAgain);
+    $("resetBtn").addEventListener("click", resetGroup);
+
+    $("groupCode").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") joinGroup();
+    });
+
+    let startX = 0;
+    let deltaX = 0;
+    let dragging = false;
+
+    foodCard.addEventListener("pointerdown", (event) => {
+      dragging = true;
+      startX = event.clientX;
+      foodCard.setPointerCapture(event.pointerId);
+      foodCard.style.transition = "none";
+    });
+
+    foodCard.addEventListener("pointermove", (event) => {
+      if (!dragging) return;
+      deltaX = event.clientX - startX;
+      const rotation = deltaX / 16;
+      foodCard.style.transform = `translateX(${deltaX}px) rotate(${rotation}deg)`;
+    });
+
+    foodCard.addEventListener("pointerup", () => {
+      if (!dragging) return;
+      dragging = false;
+      foodCard.style.transition = "transform 220ms ease, opacity 220ms ease";
+
+      if (deltaX > 95) {
+        castVote(true);
+      } else if (deltaX < -95) {
+        castVote(false);
+      } else {
+        foodCard.style.transform = "translateX(0) rotate(0deg)";
+      }
+
+      deltaX = 0;
+    });
+  </script>
+</body>
+</html>
